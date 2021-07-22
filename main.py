@@ -2,6 +2,7 @@
 import subprocess
 import re
 import codecs
+import time
 
 
 class WiFiScanner():
@@ -30,6 +31,7 @@ class WiFiScanner():
                      }
                 )
             networks[-1]['BSSID'] = result.group(1).upper()
+            networks[-1]['Last seen'] = time.time()
 
         def handle_essid(line, result, networks):
             d = result.group(1)
@@ -162,7 +164,8 @@ def handle_network(network: dict) -> int:
         "Serial number": "serial_number",
         "Primary device type": "primary_device_type",
         "Device name": "device_name",
-        "Config methods": "config_methods"
+        "Config methods": "config_methods",
+        "Last seen": "last_seen"
     }
 
     if not network['BSSID'] or\
@@ -258,6 +261,7 @@ if __name__ == '__main__':
     "primary_device_type"   TEXT,
     "device_name"   TEXT,
     "config_methods"    TEXT,
+    "last_seen" TIMESTAMP,
     PRIMARY KEY("bssid")
 );''')
 
